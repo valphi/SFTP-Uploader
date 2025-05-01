@@ -1,5 +1,5 @@
 @echo off
-set SFTP_SERVER=s-75f7a0622f7c4478a.server.transfer.eu-west-1.amazonaws.com
+set SFTP_SERVER=
 set SFTP_USER=
 set SFTP_PHRASE=
 set SFTP_PRIVATE_KEY=%USERPROFILE%\.ssh\id_rsa

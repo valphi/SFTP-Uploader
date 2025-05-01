@@ -17,7 +17,7 @@ DIR="$(cd "$(dirname "$0")" && pwd)"
   fi
 
   # Set environment variables
-  export SFTP_SERVER=s-75f7a0622f7c4478a.server.transfer.eu-west-1.amazonaws.com
+  export SFTP_SERVER=
   export SFTP_USER=
   export SFTP_PHRASE=
   export SFTP_PRIVATE_KEY="$HOME/.ssh/id_rsa"
