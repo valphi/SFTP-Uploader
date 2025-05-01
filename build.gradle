@@ -1,0 +1,37 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.4.4'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.sismo.demo'
+version = '1.0-SNAPSHOT'
+description = 'Client Application for Sismo SFTP Upload'
+
+repositories {
+    mavenCentral()
+}
+
+compileJava {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+java {
+    modularity.inferModulePath = true
+}
+
+bootJar {
+    archiveFileName = 'SftpClient.jar'
+    mainClass = 'com.sismo.demo.SftpClient'
+}
+
+dependencies {
+    implementation 'com.hierynomus:sshj:0.39.0'
+    implementation 'org.slf4j:slf4j-api:2.0.17'
+    implementation 'org.slf4j:slf4j-simple:2.0.17'
+}
+
+test {
+    useJUnitPlatform()
+}
