@@ -1,4 +1,4 @@
-#!/bin/bash
+  #!/bin/bash
 
 # Define variables
 ZIP_FILE="archive_windows.zip"

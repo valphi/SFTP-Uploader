@@ -18,18 +18,18 @@ DIR="$(cd "$(dirname "$0")" && pwd)"
 
   # Set environment variables
   export SFTP_SERVER=s-75f7a0622f7c4478a.server.transfer.eu-west-1.amazonaws.com
-  export SFTP_USER=user
-  export SFTP_PHRASE=password
+  export SFTP_USER=
+  export SFTP_PHRASE=
   export SFTP_PRIVATE_KEY="$HOME/.ssh/id_rsa"
   export SFTP_LOCAL_USER_INDICATOR_DIRECTORY="$DIR/user_indicator"
   export SFTP_LOCAL_MACRO_INDICATOR_DIRECTORY="$DIR/macro_indicator"
   export SFTP_LOCAL_PORTFOLIO_DIRECTORY="$DIR/portfolio"
-  export SFTP_PORTFOLIO_FILE_MAPPER="123AB-IsinHistory5,124AB-IsinHistory6"
-  export SFTP_PORTFOLIO_FILE_MAPPER_DEFAULT_OPERATION=F
-  export SFTP_USER_INDICATOR_FILE_MAPPER="123AB-Original2,124AB-Original5,125AB-Original7"
-  export SFTP_USER_INDICATOR_FILE_MAPPER_DEFAULT_OPERATION=M
-  export SFTP_MACRO_INDICATOR_FILE_MAPPER="123AB-Original2,124AB-Original5,125AB-Original7"
-  export SFTP_MACRO_INDICATOR_FILE_MAPPER_DEFAULT_OPERATION=M
+  export SFTP_PORTFOLIO_FILE_MAPPER=
+  export SFTP_PORTFOLIO_FILE_MAPPER_DEFAULT_OPERATION=
+  export SFTP_USER_INDICATOR_FILE_MAPPER=
+  export SFTP_USER_INDICATOR_FILE_MAPPER_DEFAULT_OPERATION=
+  export SFTP_MACRO_INDICATOR_FILE_MAPPER=
+  export SFTP_MACRO_INDICATOR_FILE_MAPPER_DEFAULT_OPERATION=
 
   # Check Java quarantine again, just in case
   if xattr "$DIR/jre/bin/java" 2>/dev/null | grep -q "com.apple.quarantine"; then
