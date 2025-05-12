@@ -20,77 +20,57 @@ import static com.sismo.demo.utils.LogUtil.log;
 
 public class FileUtil {
 
-    public static void deleteFile(File file) {
-        if (file.delete()) {
-            System.out.println("File " + file.getName() + " deleted successfully.");
-        } else {
-            System.out.println("Failed to delete file " + file.getName());
+    public static void zipAndDeleteFile(String sourceFilePath, String zipFilePath) {
+        if (zipSingleFile(sourceFilePath, zipFilePath)) {
+            deleteFile(new File(sourceFilePath));
         }
     }
 
-    public static void compressAndClearInitFile(String sourceFilePath, String zipFilePath, String localDirectory) {
-        try {
-            zipSingleFile(sourceFilePath, zipFilePath);
-            log("File compressed successfully: " + zipFilePath, localDirectory + "/" + LOG_FILE_NAME);
-        } catch (IOException e) {
-            log("Error compressing file: " + e.getMessage(), localDirectory + "/" + LOG_FILE_NAME);
-        }
-        deleteFile(new File(sourceFilePath));
-    }
-
-    public static void clearAndArchiveDirectory(String localDirectory) {
-        File folder = validateDirectory(localDirectory);
-        if (folder == null) return;
-
-        File[] files = folder.listFiles(File::isFile);
-        if (files == null || files.length == 0) {
-            log("No files or folders to process in: " + localDirectory, localDirectory + "/" + LOG_FILE_NAME);
+    public static void zipAndDeleteFile(File file, File zipFile) {
+        if (file == null || !file.isFile()) {
+            log("Invalid file to archive: " + (file != null ? file.getName() : "null"), LOG_FILE_NAME);
             return;
         }
 
-        if (files.length == 1 && files[0].getName().equals(LOG_FILE_NAME)) {
-            deleteFile(files[0]);
-            return;
+        if (zipSingleFile(file.getAbsolutePath(), zipFile.getAbsolutePath())) {
+            deleteFile(file);
         }
-
-        File archiveFile = createArchiveFile(localDirectory);
-        try (FileOutputStream fos = new FileOutputStream(archiveFile);
-             ZipOutputStream zos = new ZipOutputStream(fos)) {
-
-            for (File file : files) {
-                zipFile(file, file.getName(), zos);
-            }
-
-            log("Archive created successfully: " + archiveFile.getPath(), localDirectory + "/" + LOG_FILE_NAME);
-        } catch (IOException e) {
-            log("Error creating archive: " + e.getMessage(), localDirectory + "/" + LOG_FILE_NAME);
-        }
-
-        deleteNonArchivedFiles(files);
     }
 
-    private static File createArchiveFile(String localDirectory) {
+    public static File createArchiveFile(String localDirectory) {
         String timestamp = new SimpleDateFormat(DATE_FORMAT).format(new Date());
         String archiveFileName = ARCHIVE_PREFIX + "_" + timestamp + ZIP_EXTENSION;
         File archiveDir = new File(localDirectory, ARCHIVE_FOLDER);
-        if (!archiveDir.exists()) {
-            archiveDir.mkdir();
+        if (!archiveDir.exists() && !archiveDir.mkdir()) {
+            log("Failed to create archive directory: " + archiveDir.getPath(), LOG_FILE_NAME);
         }
         return new File(archiveDir, archiveFileName);
     }
 
-    private static void zipSingleFile(String sourceFilePath, String zipFilePath) throws IOException {
-        try (FileOutputStream fos = new FileOutputStream(zipFilePath);
-             ZipOutputStream zos = new ZipOutputStream(fos)) {
-            zipFile(new File(sourceFilePath), new File(sourceFilePath).getName(), zos);
+    public static void deleteFile(File file) {
+        if (file.delete()) {
+            log("File deleted successfully: " + file.getName(), LOG_FILE_NAME);
+        } else {
+            log("Failed to delete file: " + file.getName(), LOG_FILE_NAME);
         }
     }
 
-    private static void zipFile(File file, String entryName, ZipOutputStream zos) throws IOException {
-        try (FileInputStream fis = new FileInputStream(file)) {
-            ZipEntry zipEntry = new ZipEntry(entryName);
-            zos.putNextEntry(zipEntry);
+    private static boolean zipSingleFile(String sourceFilePath, String zipFilePath) {
+        try (FileOutputStream fos = new FileOutputStream(zipFilePath);
+             ZipOutputStream zos = new ZipOutputStream(fos)) {
+            File sourceFile = new File(sourceFilePath);
+            zipFile(sourceFile, sourceFile.getName(), zos);
+            log("File " + sourceFile.getName() + " archived successfully: " + zipFilePath, LOG_FILE_NAME);
+            return true;
+        } catch (IOException e) {
+            log("Error archiving file " + sourceFilePath + ": " + e.getMessage(), LOG_FILE_NAME);
+            return false;
+        }
+    }
 
+    public static void zipFile(File file, String entryName, ZipOutputStream zos) throws IOException {
+        try (FileInputStream fis = new FileInputStream(file)) {
+            zos.putNextEntry(new ZipEntry(entryName));
             byte[] buffer = new byte[1024];
             int length;
             while ((length = fis.read(buffer)) > 0) {
@@ -100,50 +80,31 @@ public class FileUtil {
         }
     }
 
-    private static void deleteNonArchivedFiles(File[] files) {
-        for (File file : files) {
-            if (file.isFile() && !file.getName().startsWith(ARCHIVE_PREFIX)) {
-                deleteFile(file);
-            }
-        }
-    }
-
     public static String getFileExtension(String fileName) {
-        if (fileName == null || fileName.lastIndexOf('.') == -1) {
-            return ""; // No extension found
-        }
-        return fileName.substring(fileName.lastIndexOf('.') + 1);
+        return (fileName == null || fileName.lastIndexOf('.') == -1) ? "" : fileName.substring(fileName.lastIndexOf('.') + 1);
     }
 
-
-    public static File renameFile(File file, String externalId, String operationType, String localDirectory) {
-        long epochMillis = System.currentTimeMillis();
-        String fileName = file.getName();
-        String fileExtension = getFileExtension(fileName);
-        String newFileName = externalId + "-" + epochMillis + "-" + operationType + "." + fileExtension;
+    public static File renameFile(File file, String externalId, String operationType) {
+        String newFileName = generateNewFileName(file.getName(), externalId, operationType);
         File renamedFile = new File(file.getParent(), newFileName);
 
         if (file.renameTo(renamedFile)) {
-            log("File " + fileName + " renamed to: " + newFileName, localDirectory + "/" + LOG_FILE_NAME);
+            log("File " + file.getName() + " renamed to " + newFileName, LOG_FILE_NAME);
             return renamedFile;
         } else {
-            log("Failed to rename file: " + fileName, localDirectory + "/" + LOG_FILE_NAME);
+            log("Failed to rename file: " + file.getName(), LOG_FILE_NAME);
             return null;
         }
     }
-
 
     public static Optional<String> findSubName(String fileName, Set<String> subNames) {
         return subNames.stream().filter(fileName::contains).findFirst();
     }
 
-    public static File validateDirectory(String localDirectory) {
-        File folder = new File(localDirectory);
-        if (!folder.exists() || !folder.isDirectory()) {
-            log("Invalid directory: " + localDirectory, localDirectory + "/" + LOG_FILE_NAME);
-            return null;
-        }
-        return folder;
+    private static String generateNewFileName(String originalName, String externalId, String operationType) {
+        long epochMillis = System.currentTimeMillis();
+        String fileExtension = getFileExtension(originalName);
+        return externalId + "-" + epochMillis + "-" + operationType + (fileExtension.isEmpty() ? "" : "." + fileExtension);
     }
 
 }

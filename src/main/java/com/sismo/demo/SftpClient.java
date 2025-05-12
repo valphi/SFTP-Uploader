@@ -25,6 +25,7 @@ import static com.sismo.demo.Constants.TO_ARCHIVE_FILES_IN_DIRECTORY;
 import static com.sismo.demo.Constants.USER;
 import static com.sismo.demo.Constants.USER_INDICATOR_FILE_MAPPER;
 import static com.sismo.demo.Constants.USER_INDICATOR_FILE_MAPPER_DEFAULT_OPERATION;
+import static com.sismo.demo.utils.FileUtil.createArchiveFile;
 import static com.sismo.demo.utils.LogUtil.log;
 
 public class SftpClient {
@@ -32,15 +33,18 @@ public class SftpClient {
     public static void main(String[] args) {
         SftpConnectionManager connectionManager = new SftpConnectionManager(SERVER, USER, PRIVATE_KEY, PHRASE);
         SftpFileUploader fileUploader = new SftpFileUploader(TO_ARCHIVE_FILES_IN_DIRECTORY);
-        FileUtil.deleteFile(new File(LOG_FILE_NAME));
+        String curDir = System.getProperty("user.dir");
+        File archiveLogFile = createArchiveFile(curDir);
+        File logFile = new File(LOG_FILE_NAME);
+        FileUtil.zipAndDeleteFile(logFile, archiveLogFile);
         try (SSHClient ssh = connectionManager.connect()) {
-            log("Connected to SFTP server: " + SERVER, "./" + LOG_FILE_NAME);
+            log("Connected to SFTP server: " + SERVER, logFile.getPath());
             fileUploader.uploadFilesAndArchive(ssh, LOCAL_USER_INDICATOR_DIRECTORY, SFTP_USER_INDICATOR_DIRECTORY, USER_INDICATOR_FILE_MAPPER, USER_INDICATOR_FILE_MAPPER_DEFAULT_OPERATION);
             fileUploader.uploadFilesAndArchive(ssh, LOCAL_MACRO_INDICATOR_DIRECTORY, SFTP_MACRO_INDICATOR_DIRECTORY, MACRO_INDICATOR_MAPPER, MACRO_INDICATOR_FILE_MAPPER_DEFAULT_OPERATION);
             fileUploader.uploadFilesAndArchive(ssh, LOCAL_PORTFOLIO_DIRECTORY, SFTP_PORTFOLIO_DIRECTORY, PORTFOLIO_FILE_MAPPER, PORTFOLIO_FILE_MAPPER_DEFAULT_OPERATION);
-            log("Files uploaded successfully.", "./" + LOG_FILE_NAME);
+            log("Files uploaded successfully.", logFile.getPath());
         } catch (Exception e) {
-            log("Error: " + e.getMessage(), "./" + LOG_FILE_NAME);
+            log("Error: " + e.getMessage(), logFile.getPath());
         }
     }
 }
