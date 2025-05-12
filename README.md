@@ -27,9 +27,9 @@ To get started quickly, you can download the pre-packaged zip file for your oper
 
 3. **Follow the Instructions**:
    - Navigate to the extracted directory and refer to the appropriate README file for your operating system. Each operating system has two README files (PDF and Markdown) with the same information:
-      - for Windows: [README_WINDOWS.md](https://github.com/valphi/SFTP-Uploader/blob/main/README_WINDOWS.md) and `README_WINDOWS.pdf`
-      - for macOS: [README_MACOS.md](https://github.com/valphi/SFTP-Uploader/blob/main/README_MACOS.md) and `README_MACOS.pdf`
-      - for Ubuntu: [README_UBUNTU.md](https://github.com/valphi/SFTP-Uploader/blob/main/README_UBUNTU.md) and `README_UBUNTU.pdf`
+      - for Windows: [README_WINDOWS.md](https://github.com/valphi/SFTP-Uploader/blob/main/README_WINDOWS.md) and [README_WINDOWS.pdf](https://github.com/valphi/SFTP-Uploader/blob/main/pdf-readme/README_WINDOWS.pdf)
+      - for macOS: [README_MACOS.md](https://github.com/valphi/SFTP-Uploader/blob/main/README_MACOS.md) and [README_MACOS.pdf](https://github.com/valphi/SFTP-Uploader/blob/main/pdf-readme/README_MACOS.pdf)
+      - for Ubuntu: [README_UBUNTU.md](https://github.com/valphi/SFTP-Uploader/blob/main/README_UBUNTU.md) and [README_UBUNTU.pdf](https://github.com/valphi/SFTP-Uploader/blob/main/pdf-readme/README_UBUNTU.pdf)
 
 ---
 
