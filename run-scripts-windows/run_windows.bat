@@ -32,7 +32,8 @@ set SFTP_LOCAL_PORTFOLIO_DIRECTORY=%~dp0portfolio
 set SFTP_PORTFOLIO_FILE_MAPPER=
 
 :: Specifies the default operation for portfolio files. F = replace, M = modify.
-:: Example: F
+:: Example: M
+:: ⚠️️ Pay attention to the default operation. If you set it to "F", portfolio will be replaced in Sismo even if there is only one date in the file.
 set SFTP_PORTFOLIO_FILE_MAPPER_DEFAULT_OPERATION=
 
 :: Maps external IDs to substrings in user indicator file names.
@@ -46,6 +47,7 @@ set SFTP_USER_INDICATOR_FILE_MAPPER=
 
 :: Specifies the default operation for user indicator files. F = replace, M = modify.
 :: Example: M
+:: ⚠️️ Pay attention to the default operation. If you set it to "F", user indicator will be replaced in Sismo even if there is only one date in the file.
 set SFTP_USER_INDICATOR_FILE_MAPPER_DEFAULT_OPERATION=
 
 :: Maps external IDs to substrings in macro indicator file names.
@@ -58,7 +60,8 @@ set SFTP_USER_INDICATOR_FILE_MAPPER_DEFAULT_OPERATION=
 set SFTP_MACRO_INDICATOR_FILE_MAPPER=
 
 :: Specifies the default operation for macro indicator files. F = replace, M = modify.
-:: Example: F
+:: Example: M
+:: ⚠️️ Pay attention to the default operation. If you set it to "F", macro indicator will be replaced in Sismo even if there is only one date in the file.
 set SFTP_MACRO_INDICATOR_FILE_MAPPER_DEFAULT_OPERATION=
 
 :: Define the directory of the script

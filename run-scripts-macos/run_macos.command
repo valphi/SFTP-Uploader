@@ -15,13 +15,13 @@ DIR="$(cd "$(dirname "$0")" && pwd)"
   # Set environment variables
 
   # SFTP server address
-  export SFTP_SERVER=s-75f7a0622f7c4478a.server.transfer.eu-west-1.amazonaws.com
+  export SFTP_SERVER=
 
   # SFTP username for authentication
-  export SFTP_USER=user
+  export SFTP_USER=
 
   # Passphrase for the private key (if applicable)
-  export SFTP_PHRASE=password
+  export SFTP_PHRASE=
 
   # Path to the private key used for SFTP authentication
   export SFTP_PRIVATE_KEY="$HOME/.ssh/id_rsa"
@@ -45,7 +45,8 @@ DIR="$(cd "$(dirname "$0")" && pwd)"
   export SFTP_PORTFOLIO_FILE_MAPPER=
 
   # Specifies the default operation for portfolio files. F = replace, M = modify.
-  # Example: F
+  # Example: M
+  # ⚠️️ Pay attention to the default operation. If you set it to "F", portfolio will be replaced in Sismo even if there is only one date in the file.
   export SFTP_PORTFOLIO_FILE_MAPPER_DEFAULT_OPERATION=
 
   # Maps external IDs to substrings in user indicator file names.
@@ -59,6 +60,7 @@ DIR="$(cd "$(dirname "$0")" && pwd)"
 
   # Specifies the default operation for user indicator files. F = replace, M = modify.
   # Example: M
+  # ⚠️️ Pay attention to the default operation. If you set it to "F", user indicator will be replaced in Sismo even if there is only one date in the file.
   export SFTP_USER_INDICATOR_FILE_MAPPER_DEFAULT_OPERATION=
 
   # Maps external IDs to substrings in macro indicator file names.
@@ -71,12 +73,13 @@ DIR="$(cd "$(dirname "$0")" && pwd)"
   export SFTP_MACRO_INDICATOR_FILE_MAPPER=
 
   # Specifies the default operation for macro indicator files. F = replace, M = modify.
-  # Example: F
+  # Example: M
+  # ⚠️️ Pay attention to the default operation. If you set it to "F", macro indicator will be replaced in Sismo even if there is only one date in the file.
   export SFTP_MACRO_INDICATOR_FILE_MAPPER_DEFAULT_OPERATION=
 
   # Check Java quarantine again, just in case
   if xattr "$DIR/jre/bin/java" 2>/dev/null | grep -q "com.apple.quarantine"; then
-    echo "⚠️ Java runtime is quarantined. Please run:"
+    echo "⚠️️ Java runtime is quarantined. Please run:"
     echo "    sudo xattr -rd com.apple.quarantine \"$DIR/jre\""
     exit 1
   fi

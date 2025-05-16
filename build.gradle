@@ -1,7 +1,6 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.4.4'
-    id 'io.spring.dependency-management' version '1.1.7'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 group = 'com.sismo.demo'
@@ -21,9 +20,13 @@ java {
     modularity.inferModulePath = true
 }
 
-bootJar {
+shadowJar {
     archiveFileName = 'SftpClient.jar'
-    mainClass = 'com.sismo.demo.SftpClient'
+    manifest {
+        attributes(
+                'Main-Class': 'com.sismo.demo.SftpClient'
+        )
+    }
 }
 
 dependencies {
