@@ -1,25 +1,38 @@
 @echo off
+@echo off
 :: SFTP server address
 :: Possible errors:
-:: -
+:: - Wrong host with error "Error: <wrong host name>"
 set SFTP_SERVER=
 
 :: SFTP username for authentication
+:: Possible errors:
+:: - Wrong user name with error "Exhausted available authentication methods"
 set SFTP_USER=
 
 :: Passphrase for the private key (if applicable)
+:: Possible errors:
+:: - Wrong phrase with error "Error: Exhausted available authentication methods"
 set SFTP_PHRASE=
 
 :: Path to the private key used for SFTP authentication
+:: Possible errors:
+:: - Wrong path to private key with error "Error: <wrong path to rsa file> (The system cannot find the file specified)"
 set SFTP_PRIVATE_KEY=%USERPROFILE%\.ssh\id_rsa
 
 :: Directory for storing user indicator files
+:: Possible errors:
+:: - Directory doesn't exist with error "Invalid directory: <path to wrong directory>"
 set SFTP_LOCAL_USER_INDICATOR_DIRECTORY=%~dp0user_indicator
 
 :: Directory for storing macro indicator files
+:: Possible errors:
+:: - Directory doesn't exist with error "Invalid directory: <path to wrong directory>"
 set SFTP_LOCAL_MACRO_INDICATOR_DIRECTORY=%~dp0macro_indicator
 
 :: Directory for storing portfolio files
+:: Possible errors:
+:: - Directory doesn't exist with error "Invalid directory: <path to wrong directory>"
 set SFTP_LOCAL_PORTFOLIO_DIRECTORY=%~dp0portfolio
 
 :: Maps external IDs to substrings in portfolio file names.

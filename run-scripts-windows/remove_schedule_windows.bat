@@ -1,7 +1,7 @@
 @echo off
 
 :: Define the task name
-set TASK_NAME=RunWindowsScriptDaily
+set TASK_NAME=RunSftpClientDaily
 
 :: Remove the scheduled task
 powershell -Command ^

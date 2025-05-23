@@ -18,7 +18,7 @@ This guide explains how to prepare, configure, and run SftpClient.jar on macOS. 
    Ensure the jre folder is included in the same directory as the SftpClient.jar.
 
 2. **Environment Variables**  
-   The run_macos.sh script requires several environment variables to be set. Update these to match your environment before execution.
+   The run_macos.command script requires several environment variables to be set. Update these to match your environment before execution.
 
 3. **Required Folders**  
    The following folders in the root directory of the application (created during the zip packaging) are used by default for file uploads:
@@ -26,7 +26,7 @@ This guide explains how to prepare, configure, and run SftpClient.jar on macOS. 
     - `macro_indicator`: for macro indicator files.
     - `portfolio`: for portfolio files.
 
-You may create your own folders and update the environment variables in run_macos.sh accordingly.
+You may create your own folders and update the environment variables in run_macos.command accordingly.
 
 ---
 
@@ -81,7 +81,7 @@ Below are key environment variables, their purposes, and usage examples:
 
 1. **Edit the Script**
 
-   ⚠️️ Open run_macos.sh in a text editor (through right click menu) and update environment variables with values specific to your setup.
+   ⚠️️ Open run_macos.command in a text editor (through right click menu) and update environment variables with values specific to your setup.
 
 2. **Make the File Executable**:
     - Open the terminal and navigate to the directory containing `run_macos.command`.
@@ -111,17 +111,17 @@ Below are key environment variables, their purposes, and usage examples:
 ## Steps to Run `SftpClient.jar` Manually using Terminal
 
 1. **Adjust Environment Variables:**
-    - Open `run_macos.sh` in a text editor.
+    - Open `run_macos.command` in a text editor.
     - Update the environment variables with the correct values for your environment.
 
 2. **Run the Script:**
     - Make the script executable:
     ```bash
-      chmod +x run_macos.sh
+      chmod +x run_macos.command
     ```
     - Execute the script:
     ```bash
-      ./run_macos.sh
+      ./run_macos.command
     ```
 
 3. **Verify Execution:**
@@ -132,12 +132,12 @@ Below are key environment variables, their purposes, and usage examples:
 ## Schedule `SftpClient.jar` to Run Daily at 05:00 AM
 
 1. **Prepare the Script:**
-    - Ensure `schedule_macos.sh` is in the same directory as `run_macos.sh`.
+    - Ensure `schedule_macos.command` is in the same directory as `run_macos.command`.
 
 2. **Run the Scheduler Script:**
-    - Execute `schedule_macos.sh` to create a `launchd` task:
+    - Execute `schedule_macos.command` to create a `launchd` task:
       ```bash
-      ./schedule_macos.sh
+      ./schedule_macos.command
       ```
 
 3. **Verify the Task:**
@@ -151,9 +151,9 @@ Below are key environment variables, their purposes, and usage examples:
 ## Remove the Scheduled Task
 
 1. **Run the Removal Script:**
-    - Execute `remove_schedule_macos.sh` to remove the `launchd` task:
+    - Execute `remove_schedule_macos.command` to remove the `launchd` task:
       ```bash
-      ./remove_schedule_macos.sh
+      ./remove_schedule_macos.command
       ```
 
 2. **Verify Removal:**
@@ -167,8 +167,8 @@ Below are key environment variables, their purposes, and usage examples:
 ## **Important Notes**
 ⚠️⚠️⚠️
 
-- All .sh scripts (`run_macos.sh`, `schedule_macos.sh`, `remove_schedule_macos.sh`) must be in the same directory as `SftpClient.jar` and the `jre` folder.
-- The folders `user_indicator`, `macro_indicator`, and `portfolio` are created during packaging. You may use custom folders by updating `run_macos.sh`.
+- All .command scripts (`run_macos.command`, `schedule_macos.command`, `remove_schedule_macos.command`) must be in the same directory as `SftpClient.jar` and the `jre` folder.
+- The folders `user_indicator`, `macro_indicator`, and `portfolio` are created during packaging. You may use custom folders by updating `run_macos.command`.
 - If you encounter errors, check logs in the Task Scheduler or in `log.txt`.
 
 ---
@@ -178,9 +178,9 @@ Below are key environment variables, their purposes, and usage examples:
 The directory should have the following structure:
 ```
 /your-directory
-├── run_macos.sh
-├── schedule_macos.sh
-├── remove_schedule_macos.sh
+├── run_macos.command
+├── schedule_macos.command
+├── remove_schedule_macos.command
 ├── SftpClient.jar
 ├── README_MACOS.md
 ├── README_MACOS.pdf
@@ -202,4 +202,4 @@ Ensure the jre folder is present and correctly populated.
 Confirm you have the required permissions. Check the History tab for details.
 
 - **Incorrect Environment Variables**  
-Double-check the variables in run_macos.sh for typos or invalid values.
+Double-check the variables in run_macos.command for typos or invalid values.

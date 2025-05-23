@@ -2,7 +2,7 @@
 
 PLIST_FILE="$HOME/Library/LaunchAgents/com.user.sftpclient.plist"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-RUN_SCRIPT="$SCRIPT_DIR/run_macos.sh"
+RUN_SCRIPT="$SCRIPT_DIR/run_macos.command"
 
 # Ensure script is executable
 chmod +x "$RUN_SCRIPT"
