@@ -1,5 +1,4 @@
 @echo off
-@echo off
 :: SFTP server address
 :: Possible errors:
 :: - Wrong host with error "Error: <wrong host name>"

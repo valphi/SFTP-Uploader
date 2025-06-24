@@ -32,9 +32,9 @@ Use your preferred tool to extract the zip file to a directory of your choice.
 > your operating system. Each OS has two versions of the README (PDF and
 > Markdown) containing identical instructions:
 
-- Windows: [README_WINDOWS.md](https://github.com/valphi/SFTP-Uploader/blob/main/README_WINDOWS.md) and [README_WINDOWS.pdf](https://github.com/valphi/SFTP-Uploader/blob/main/pdf-readme/README_WINDOWS.pdf)
-- macOS: [README_MACOS.md](https://github.com/valphi/SFTP-Uploader/blob/main/README_MACOS.md) and [README_MACOS.pdf](https://github.com/valphi/SFTP-Uploader/blob/main/pdf-readme/README_MACOS.pdf)
-- Ubuntu: [README_UBUNTU.md](https://github.com/valphi/SFTP-Uploader/blob/main/README_UBUNTU.md) and [README_UBUNTU.pdf](https://github.com/valphi/SFTP-Uploader/blob/main/pdf-readme/README_UBUNTU.pdf)
+- Windows: [README_WINDOWS.md](https://github.com/valphi/SFTP-Uploader/blob/main/README_WINDOWS.md) and [README_WINDOWS.pdf](https://github.com/valphi/SFTP-Uploader/raw/main/pdf-readme/README_WINDOWS.pdf)
+- macOS: [README_MACOS.md](https://github.com/valphi/SFTP-Uploader/blob/main/README_MACOS.md) and [README_MACOS.pdf](https://github.com/valphi/SFTP-Uploader/raw/main/pdf-readme/README_MACOS.pdf)
+- Ubuntu: [README_UBUNTU.md](https://github.com/valphi/SFTP-Uploader/blob/main/README_UBUNTU.md) and [README_UBUNTU.pdf](https://github.com/valphi/SFTP-Uploader/raw/main/pdf-readme/README_UBUNTU.pdf)
 
 ---
 
