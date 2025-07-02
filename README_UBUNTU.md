@@ -8,6 +8,7 @@ This project is licensed under the MIT License - see the [LICENSE](https://githu
 
 This guide explains how to prepare, configure, and run SftpClient.jar on Ubuntu. It also includes instructions for scheduling the application to run daily at 05:00 AM and for removing the scheduled task.
 
+**Note:** *05:00 AM is configured in the local time zone. It is recommended to adjust the schedule so that file uploads occur at 5:00 AM UTC.*
 **Note:** *SftpClient is a Java-based application that connects to an SFTP server and uploads files to a specified directory.*
 
 ---
@@ -22,9 +23,9 @@ This guide explains how to prepare, configure, and run SftpClient.jar on Ubuntu.
 
 3. **Required Folders**
    The following folders in the root directory of the application (created during the zip packaging) are used by default for file uploads:
+    - `portfolio`: for portfolio files.
     - `user_indicator`: for stock-related indicator files.
     - `macro_indicator`: for macro indicator files.
-    - `portfolio`: for portfolio files.
 
 You may create your own folders and update the environment variables in run_ubuntu.sh accordingly.
 
@@ -32,11 +33,48 @@ You may create your own folders and update the environment variables in run_ubun
 
 ## Environment Variables
 
-Below are key environment variables, their purposes, and usage examples:
+Below there are key environment variables, their purposes, and usage examples:
+
+#### SFTP_SERVER
+
+- **Purpose**: Specifies the hostname or IP address of the SFTP server to which files will be uploaded.
+- **Example**: `sftp.example.com` or `192.168.1.100`
+
+#### SFTP_USER
+
+- **Purpose**: The username used for authenticating with the SFTP server.
+- **Example**: `sftpuser`
+
+#### SFTP_PRIVATE_KEY
+
+- **Purpose**: Path to the private SSH key file used for SFTP authentication.
+- **Example**: `/home/youruser/.ssh/id_rsa`
+
+#### SFTP_PHRASE
+
+- **Purpose**: Passphrase for the private SSH key, if required. Leave empty if the key is not encrypted.
+- **Example**: `yourSecretPassphrase`  
+  *(Leave blank if not needed)*
+
+#### SFTP_LOCAL_USER_INDICATOR_DIRECTORY
+
+- **Purpose**: Directory path containing user indicator files to be uploaded.
+- **Example**: `/home/youruser/sftpclient/user_indicator`
+
+#### SFTP_LOCAL_MACRO_INDICATOR_DIRECTORY
+
+- **Purpose**: Directory path containing macro indicator files to be uploaded.
+- **Example**: `/home/youruser/sftpclient/macro_indicator`
+
+#### SFTP_LOCAL_PORTFOLIO_DIRECTORY
+
+- **Purpose**: Directory path containing portfolio files to be uploaded.
+- **Example**: `/home/youruser/sftpclient/portfolio`
 
 #### SFTP_PORTFOLIO_FILE_MAPPER
 
-- **Purpose**: Maps external IDs to substrings in file names for portfolios, enabling automatic renaming before upload.
+- **Purpose**: Maps external IDs to substrings in file names for portfolios, which are stored on a user's side, enabling, enabling automatic renaming before upload.
+  There should be no hyphens/dashes in the portfolio names (e.g. Portfolio1 as below)
 - **Example**: *PortfolioExternalId1-Portfolio1*, *PortfolioExternalId2-Portfolio2*
 - **Mock File Name**: `Portfolio1_Report.csv` renamed to `PortfolioExternalId1-[timestamp]-[operation].csv`
   (The substring Portfolio1 in the file name matches the mapping PortfolioExternalId1-Portfolio1. The file is renamed to `PortfolioExternalId1-[timestamp]-[operation].csv` before being uploaded)
@@ -58,6 +96,8 @@ Below are key environment variables, their purposes, and usage examples:
 #### SFTP_USER_INDICATOR_FILE_MAPPER_DEFAULT_OPERATION
 
 - **Purpose**: Default operation for user indicator files.
+    - F = replace file and delete history
+    - M = modify file
 - **Example**: M
   Files will be uploaded with the "modify" operation unless specified otherwise.
 
@@ -202,7 +242,7 @@ The directory should have the following structure:
 ## Troubleshooting
 
 - **Java Runtime Not Found**
-  Ensure the jre folder is present and correctly populated.
+  Ensure the jre folder is present.
 
 - **Task Scheduler Errors**
   Confirm you have the required permissions. Check the History tab for details.
