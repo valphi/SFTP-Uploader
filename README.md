@@ -29,8 +29,8 @@ Use your preferred tool to extract the zip file to a directory of your choice.
 3. **Follow the Instructions**
 
 > In the extracted directory, refer to the appropriate README files for
-> your operating system. Each OS has two versions of the README (PDF and
-> Markdown) containing identical instructions:
+> your operating system. Each OS has two versions of the README (Markdown and
+> PDF) containing identical instructions:
 
 - Windows: [README_WINDOWS.md](https://github.com/valphi/SFTP-Uploader/blob/main/README_WINDOWS.md) and [README_WINDOWS.pdf](https://github.com/valphi/SFTP-Uploader/raw/main/pdf-readme/README_WINDOWS.pdf)
 - macOS: [README_MACOS.md](https://github.com/valphi/SFTP-Uploader/blob/main/README_MACOS.md) and [README_MACOS.pdf](https://github.com/valphi/SFTP-Uploader/raw/main/pdf-readme/README_MACOS.pdf)
