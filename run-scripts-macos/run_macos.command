@@ -89,3 +89,5 @@ DIR="$(cd "$(dirname "$0")" && pwd)"
 
   echo "✅ Script finished at $(date)"
 }
+
+exit 0

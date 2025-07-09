@@ -87,3 +87,5 @@ if not exist "%DIR%jre\bin" (
 
 :: Run the Java application
 "%DIR%jre\bin\java.exe" -jar "%DIR%SftpClient.jar"
+
+exit /b 0

@@ -11,3 +11,5 @@ powershell -Command ^
     "$Settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries;" ^
     "Register-ScheduledTask -TaskName '%TASK_NAME%' -Action $Action -Trigger $Trigger -Settings $Settings -Force;" ^
     "if (Get-ScheduledTask -TaskName '%TASK_NAME%' -ErrorAction SilentlyContinue) { Write-Host '✅ Scheduled task created successfully.' } else { Write-Host '❌ Failed to create scheduled task.' }"
+
+exit /b 0

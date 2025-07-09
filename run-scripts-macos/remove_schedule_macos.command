@@ -22,3 +22,5 @@ if [ -f "$PLIST_FILE" ]; then
 else
     echo "❌ Task file not found: $PLIST_FILE"
 fi
+
+exit 0

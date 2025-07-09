@@ -48,3 +48,5 @@ if launchctl list | grep -q "com.user.sftpclient"; then
 else
   echo "❌ Scheduling failed. Check permissions or logs."
 fi
+
+exit 0

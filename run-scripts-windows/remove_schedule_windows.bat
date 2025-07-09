@@ -11,3 +11,5 @@ powershell -Command ^
     "} else {" ^
     "    Write-Host '❌ Task not found: %TASK_NAME%';" ^
     "}"
+
+exit /b 0
