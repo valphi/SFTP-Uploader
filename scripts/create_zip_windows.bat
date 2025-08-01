@@ -19,7 +19,7 @@ if exist "%ZIP_FILE%" (
 )
 
 :: Build the project using Gradle
-gradlew build
+gradlew shadowJar
 
 :: Copy the JAR file to the root directory, replacing it if it exists
 if exist "build\libs\SftpClient.jar" (

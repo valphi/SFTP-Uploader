@@ -5,11 +5,13 @@ import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.sftp.SFTPClient;
 
 import java.io.File;
-import java.util.HashSet;
+import java.text.Normalizer;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import static com.sismo.demo.Constants.ALLOWED_FILE_OPERATIONS;
 import static com.sismo.demo.Constants.CSV_EXTENSION;
 import static com.sismo.demo.Constants.LOG_FILE_NAME;
 import static com.sismo.demo.Constants.ZIP_EXTENSION;
@@ -32,6 +34,11 @@ public class SftpFileUploader {
                                       String sftpDirectory,
                                       String fileMapper,
                                       String operationType) {
+        if (!ALLOWED_FILE_OPERATIONS.contains(operationType)) {
+            log("Invalid operation type: " + operationType + " for "+ sftpDirectory.replace("/", "") +". Allowed operations are: " + ALLOWED_FILE_OPERATIONS, LOG_FILE_NAME);
+            return;
+        }
+
         File folder = validateDirectory(localDirectory);
         if (folder == null) {
             log("Invalid directory: " + localDirectory, LOG_FILE_NAME);
@@ -59,17 +66,17 @@ public class SftpFileUploader {
     }
 
     private Map<String, String> parseFileMapper(String fileMapper) {
-        if (fileMapper == null || fileMapper.isEmpty()) return null;
-        Map<String, String> subNameByExternalId = FileMapperParserUtil.parseFileMapper(fileMapper);
-        if (subNameByExternalId.isEmpty()) {
-            log("Mapping parameter is empty or contains more then one similar subName in mappings: " + fileMapper, LOG_FILE_NAME);
-            return null;
+        if (fileMapper == null || fileMapper.isEmpty()) {
+            return Map.of();
         }
-        if (subNameByExternalId.keySet().stream().anyMatch(subName -> subName.contains("-"))) {
-            log("Mapping parameter contains invalid subName with '-' character: " + fileMapper, LOG_FILE_NAME);
-            return null;
-        }
-        return subNameByExternalId;
+        Map<String, String> normalizedMap = FileMapperParserUtil.parseFileMapper(fileMapper).entrySet().stream()
+                .collect(Collectors.toMap(
+                        e -> normalizeString(e.getKey()),
+                        e -> normalizeString(e.getValue())
+                ));
+
+        validateFileMapper(normalizedMap, fileMapper);
+        return Map.copyOf(normalizedMap);
     }
 
     private void processFile(SSHClient ssh,
@@ -96,8 +103,11 @@ public class SftpFileUploader {
                     return;
                 }
                 String externalId = fileNameSplit[0];
-                Set<String> externalIds = new HashSet<>(subNameByExternalId.values());
-                if (externalId != null && !externalIds.contains(externalId)) {
+                Set<String> normalizedExternalIds = subNameByExternalId.values().stream()
+                        .map(this::normalizeString)
+                        .collect(Collectors.toSet());
+                String normalizedExternalId = normalizeString(externalId);
+                if (normalizedExternalId != null && !normalizedExternalIds.contains(normalizedExternalId)) {
                     log("File name does not match any subName in the mapping parameter. File isn't uploaded: " + fileName, LOG_FILE_NAME);
                     return;
                 }
@@ -136,5 +146,25 @@ public class SftpFileUploader {
         return toArchiveDirectories.contains(sftpDirectory)
                && !fileName.endsWith("-D.csv")
                && !fileName.endsWith(ZIP_EXTENSION);
+    }
+
+    private void validateFileMapper(Map<String, String> map, String fileMapper) {
+        if (map.isEmpty()) {
+            log("Mapping parameter is empty or contains more than one similar subName in mappings: " + fileMapper, LOG_FILE_NAME);
+            throw new IllegalArgumentException("Invalid file mapper: empty or duplicate subNames");
+        }
+        if (map.keySet().stream().anyMatch(subName -> subName.contains("-"))) {
+            log("Mapping parameter contains invalid subName with '-' character: " + fileMapper, LOG_FILE_NAME);
+            throw new IllegalArgumentException("Invalid file mapper: subName contains '-'");
+        }
+        if (map.values().stream().anyMatch(externalId -> externalId.contains("-") || externalId.contains("."))) {
+            log("Mapping parameter contains invalid externalId with '-' or '.' character: " + fileMapper, LOG_FILE_NAME);
+            throw new IllegalArgumentException("Invalid file mapper: externalId contains '-' or '.'");
+        }
+    }
+
+    private String normalizeString(String input) {
+        if (input == null) return null;
+        return Normalizer.normalize(input.trim(), Normalizer.Form.NFC);
     }
 }

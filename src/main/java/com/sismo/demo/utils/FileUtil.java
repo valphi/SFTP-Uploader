@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
@@ -14,11 +16,21 @@ import java.util.zip.ZipOutputStream;
 import static com.sismo.demo.Constants.ARCHIVE_FOLDER;
 import static com.sismo.demo.Constants.ARCHIVE_PREFIX;
 import static com.sismo.demo.Constants.DATE_FORMAT;
+import static com.sismo.demo.Constants.LOCAL_MACRO_INDICATOR_DIRECTORY;
+import static com.sismo.demo.Constants.LOCAL_PORTFOLIO_DIRECTORY;
+import static com.sismo.demo.Constants.LOCAL_USER_INDICATOR_DIRECTORY;
 import static com.sismo.demo.Constants.LOG_FILE_NAME;
+import static com.sismo.demo.Constants.USERS;
 import static com.sismo.demo.Constants.ZIP_EXTENSION;
 import static com.sismo.demo.utils.LogUtil.log;
 
 public class FileUtil {
+
+    public static void prepareUserDirectories() {
+        copyMainDirectoryFilesToUserDirectories(LOCAL_USER_INDICATOR_DIRECTORY);
+        copyMainDirectoryFilesToUserDirectories(LOCAL_MACRO_INDICATOR_DIRECTORY);
+        copyMainDirectoryFilesToUserDirectories(LOCAL_PORTFOLIO_DIRECTORY);
+    }
 
     public static void zipAndDeleteFile(String sourceFilePath, String zipFilePath) {
         if (zipSingleFile(sourceFilePath, zipFilePath)) {
@@ -105,6 +117,83 @@ public class FileUtil {
         long epochMillis = System.currentTimeMillis();
         String fileExtension = getFileExtension(originalName);
         return externalId + "-" + epochMillis + "-" + operationType + (fileExtension.isEmpty() ? "" : "." + fileExtension);
+    }
+
+    private static void ensureUserDirectoriesExist(String baseDirectory) {
+        for (String user : USERS) {
+            String userDirectory = baseDirectory + File.separator + user;
+            File userDir = new File(userDirectory);
+
+            if (!userDir.exists()) {
+                if (userDir.mkdirs()) {
+                    log("Created user directory: " + userDirectory, LOG_FILE_NAME);
+                } else {
+                    log("Failed to create user directory: " + userDirectory, LOG_FILE_NAME);
+                }
+            }
+        }
+    }
+
+    private static void copyMainDirectoryFilesToUserDirectories(String localDirectory) {
+        File mainDir = validateDirectory(localDirectory);
+        if (mainDir == null) {
+            log("Invalid directory for copying: " + localDirectory, LOG_FILE_NAME);
+            return;
+        }
+
+        ensureUserDirectoriesExist(localDirectory);
+
+        // Get all files in the main directory (excluding special files)
+        File[] files = mainDir.listFiles(file ->
+                file.isFile() &&
+                !file.getName().startsWith(ARCHIVE_PREFIX) &&
+                !file.getName().equals(LOG_FILE_NAME)
+        );
+
+        if (files == null || files.length == 0) {
+            return;
+        }
+
+        log("Found " + files.length + " files in main directory to distribute to user directories", LOG_FILE_NAME);
+
+        // Copy each file to each user's directory
+        for (String user : USERS) {
+            String userDirectory = localDirectory + File.separator + user;
+            File userDir = new File(userDirectory);
+
+            // Copy each file
+            for (File file : files) {
+                try {
+                    File destFile = new File(userDir, file.getName());
+                    Files.copy(file.toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    log("Copied file " + file.getName() + " to user directory: " + userDirectory, LOG_FILE_NAME);
+                } catch (IOException e) {
+                    log("Error copying file " + file.getName() + " to user directory: " + e.getMessage(), LOG_FILE_NAME);
+                }
+            }
+        }
+
+        // Delete the original files after they've been copied to all user directories
+        for (File file : files) {
+            try {
+                if (file.delete()) {
+                    log("Deleted original file after copying to all users: " + file.getName(), LOG_FILE_NAME);
+                } else {
+                    log("Failed to delete original file: " + file.getName(), LOG_FILE_NAME);
+                }
+            } catch (Exception e) {
+                log("Error deleting original file " + file.getName() + ": " + e.getMessage(), LOG_FILE_NAME);
+            }
+        }
+    }
+
+    private static File validateDirectory(String directoryPath) {
+        if (directoryPath == null || directoryPath.isEmpty()) {
+            return null;
+        }
+
+        File directory = new File(directoryPath);
+        return directory.exists() && directory.isDirectory() ? directory : null;
     }
 
 }

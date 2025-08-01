@@ -9,7 +9,48 @@ This project is licensed under the MIT License - see the [LICENSE](https://githu
 This guide explains how to prepare, configure, and run SftpClient.jar on Ubuntu. It also includes instructions for scheduling the application to run daily at 05:00 AM and for removing the scheduled task.
 
 **Note:** *05:00 AM is configured in the local time zone. It is recommended to adjust the schedule so that file uploads occur at 5:00 AM UTC.*
+
 **Note:** *SftpClient is a Java-based application that connects to an SFTP server and uploads files to a specified directory.*
+
+---
+
+## Single-User and Multi-User Modes
+
+SftpClient supports two operational modes:
+
+### 1. Single-User Mode
+
+- **Default mode** when only one username is provided in the SFTP_USER variable
+- All files are uploaded using a single SFTP account
+- Files are taken directly from the main directories (user_indicator, macro_indicator, portfolio)
+
+### 2. Multi-User Mode
+
+- **Activated automatically** when multiple comma-separated usernames are provided in SFTP_USER
+- Files are distributed to and uploaded from user-specific subdirectories
+- Each user's files are uploaded using their respective SFTP credentials
+- **Important:** User-specific subdirectories are created automatically with the same names as the SFTP usernames
+
+#### How Multi-User Mode Works:
+
+1. When multiple users are detected, the application creates user-specific subdirectories in each main directory
+2. Files from the main directories are copied to each user's subdirectory
+3. Files are uploaded separately for each user using their respective usernames and the same private and public keys
+4. **Directory structure is automatically created** - if directories don't exist, they will be created during execution
+
+#### Setting Up Multi-User Mode:
+
+Update the `SFTP_USER` environment variable in `run_macos.command` with comma-separated usernames:
+
+```bash
+# SFTP username(s) for authentication
+# For single user: export SFTP_USER=username
+# For multiple users: separate with commas, e.g., "user1,user2,user3"
+# Example: export SFTP_USER="user1,user2,user3"
+export SFTP_USER=
+```
+
+⚠️ **Important:** The subdirectory names MUST match exactly with the usernames specified in the SFTP_USER variable.
 
 ---
 
@@ -42,8 +83,15 @@ Below there are key environment variables, their purposes, and usage examples:
 
 #### SFTP_USER
 
-- **Purpose**: The username used for authenticating with the SFTP server.
-- **Example**: `sftpuser`
+- **Purpose**: The username(s) used for authenticating with the SFTP server.
+- **Single-User Example**: `sftpuser`
+- **Multi-User Example**: `user1,user2,user3`
+
+  When multiple users are specified:
+    - User-specific subfolders can be automatically created in user_indicator, macro_indicator, and portfolio directories or can be created manually.
+    - Each subfolder name must match the corresponding username exactly
+    - Files from main directories are distributed to all user directories
+    - The application uploads files for each user with their respective username and the same private/public keys
 
 #### SFTP_PRIVATE_KEY
 
@@ -222,20 +270,46 @@ Below there are key environment variables, their purposes, and usage examples:
 
 ## File Structure
 
-The directory should have the following structure:
+### Single-User Mode Structure:
 ```
 /your-directory
-├── run_ubuntu.sh
-├── schedule_ubuntu.sh
-├── remove_schedule_ubuntu.sh
+├── run_macos.command
+├── schedule_macos.command
+├── remove_schedule_macos.command
 ├── SftpClient.jar
-├── README_UBUNTU.md
-├── README_UBUNTU.pdf
+├── README_MACOS.md
+├── README_MACOS.pdf
+├── jre/
+├── user_indicator/         # Contains files to upload
+├── macro_indicator/        # Contains files to upload
+├── portfolio/              # Contains files to upload
+```
+
+### Multi-User Mode Structure:
+```
+/your-directory
+├── run_macos.command
+├── schedule_macos.command
+├── remove_schedule_macos.command
+├── SftpClient.jar
+├── README_MACOS.md
+├── README_MACOS.pdf
 ├── jre/
 ├── user_indicator/
+│   ├── user1/             # User-specific subdirectory for "user1" SFTP account
+│   ├── user2/             # User-specific subdirectory for "user2" SFTP account
+│   └── user3/             # User-specific subdirectory for "user3" SFTP account
 ├── macro_indicator/
+│   ├── user1/             # User-specific subdirectory for "user1" SFTP account
+│   ├── user2/             # User-specific subdirectory for "user2" SFTP account
+│   └── user3/             # User-specific subdirectory for "user3" SFTP account
 ├── portfolio/
+│   ├── user1/             # User-specific subdirectory for "user1" SFTP account
+│   ├── user2/             # User-specific subdirectory for "user2" SFTP account
+│   └── user3/             # User-specific subdirectory for "user3" SFTP account
 ```
+
+**Note:** When using multi-user mode, empty folders will be created automatically if they don't exist. Macro and user indicator files placed in the root directory will be automatically distributed to user-specific folders.
 
 ---
 

@@ -18,8 +18,8 @@ if [ -f "$ZIP_FILE" ]; then
     echo "✅ Previous zip file '$ZIP_FILE' removed."
 fi
 
-# Build the project using Gradle
-./gradlew build
+# Build the project using Gradle with shadowJar to include proper manifest
+./gradlew shadowJar
 
 # Copy the JAR file to the root directory, replacing it if it exists
 if [ -f "build/libs/SftpClient.jar" ]; then

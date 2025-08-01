@@ -2,7 +2,13 @@
 # SFTP server address
 export SFTP_SERVER=
 
-# SFTP username for authentication
+# SFTP username(s) for authentication
+# For single user: SFTP_USER=username
+# For multiple users: separate with commas, e.g., "user1,user2,user3"
+# Example: SFTP_USER=user1,user2,user3
+# Note: If you use multiple users:
+#   - The only one pair of public and private keys will be used for all users.
+#   - User-specific subfolders can be automatically created in user_indicator,  macro_indicator, and portfolio directories for each user in the list.
 export SFTP_USER=
 
 # Passphrase for the private key (if applicable)
@@ -27,6 +33,10 @@ export SFTP_LOCAL_PORTFOLIO_DIRECTORY="$(pwd)/portfolio"
 # - PortfolioExternalId2: External ID of the second portfolio.
 # - Portfolio2: Substring in the file name within the portfolio folder that matches the second portfolio.
 # Dont use '-' character in the substring
+# Possible errors:
+# - "Mapping parameter is empty or contains more then one similar subName in mappings"
+#   Make sure that the substring is unique in the mapping parameters.
+#   For example, if you have value "a-a,aa-aa" or "PortfolioExternalId-Portfolio,PortfolioExternalId1-Portfolio1" there will be an error.
 export SFTP_PORTFOLIO_FILE_MAPPER=
 
 # Specifies the default operation for portfolio files. F = replace, M = modify.
@@ -41,6 +51,10 @@ export SFTP_PORTFOLIO_FILE_MAPPER_DEFAULT_OPERATION=
 # - UserExternalId2: External ID of the second user indicator.
 # - UserIndicator2: Substring in the file name within the user indicator folder that matches the second user indicator.
 # Dont use '-' character in the substring
+# Possible errors:
+# - "Mapping parameter is empty or contains more then one similar subName in mappings"
+#   Make sure that the substring is unique in the mapping parameters.
+#   For example, if you have value "a-a,aa-aa" or "UserExternalId-UserIndicator,UserExternalId1-UserIndicator1" there will be an error.
 export SFTP_USER_INDICATOR_FILE_MAPPER=
 
 # Specifies the default operation for user indicator files. F = replace, M = modify.
@@ -55,6 +69,10 @@ export SFTP_USER_INDICATOR_FILE_MAPPER_DEFAULT_OPERATION=
 # - MacroExternalId2: External ID of the second macro indicator.
 # - MacroIndicator2: Substring in the file name within the macro indicator folder that matches the second macro indicator.
 # Dont use '-' character in the substring
+# Possible errors:
+# - "Mapping parameter is empty or contains more then one similar subName in mappings"
+#   Make sure that the substring is unique in the mapping parameters.
+#   For example, if you have value "a-a,aa-aa" or "MacroExternalId1-MacroIndicator1,MacroExternalId-MacroIndicator" there will be an error.
 export SFTP_MACRO_INDICATOR_FILE_MAPPER=
 
 # Specifies the default operation for macro indicator files. F = replace, M = modify.

@@ -8,7 +8,7 @@ SftpClient is a cross-platform Java 21 application for securely uploading files 
 
 ## ✅ Copilot Goals
 
-- Generate concise, idiomatic Java 21 code
+- Generate concise, idiomatic Java 21 code according to best practices and SOLID principles
 - Use Gradle for builds and dependency management
 - Ensure cross-platform compatibility (Windows, macOS, Ubuntu)
 - Implement secure SFTP file upload using SSHJ (SSH key authentication preferred)

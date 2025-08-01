@@ -3,8 +3,31 @@
 # Define log file with timestamp
 DIR="$(cd "$(dirname "$0")" && pwd)"
 
+# Change to the script's directory
+cd "$DIR"
+
 {
   echo "🕓 Script started at $(date)"
+  echo "📁 Working directory: $DIR"
+
+  # Create required directories if they don't exist
+  echo "📂 Creating required directories if they don't exist..."
+  mkdir -p "$DIR/user_indicator"
+  mkdir -p "$DIR/macro_indicator"
+  mkdir -p "$DIR/portfolio"
+
+  # If using multiple users, create user subdirectories in each main directory
+  if [[ "$SFTP_USER" == *,* ]]; then
+    echo "👥 Multiple users detected, creating user subdirectories..."
+    IFS=',' read -ra USERS <<< "$SFTP_USER"
+    for user in "${USERS[@]}"; do
+      user=$(echo "$user" | xargs)  # Trim whitespace
+      mkdir -p "$DIR/user_indicator/$user"
+      mkdir -p "$DIR/macro_indicator/$user"
+      mkdir -p "$DIR/portfolio/$user"
+      echo "  ➡️ Created subdirectories for user: $user"
+    done
+  fi
 
   # Unquarantine all files in the directory
   if command -v xattr &>/dev/null; then
@@ -17,7 +40,13 @@ DIR="$(cd "$(dirname "$0")" && pwd)"
   # SFTP server address
   export SFTP_SERVER=
 
-  # SFTP username for authentication
+  # SFTP username(s) for authentication
+  # For single user: SFTP_USER=username
+  # For multiple users: separate with commas, e.g., "user1,user2,user3"
+  # Example: SFTP_USER=user1,user2,user3
+  # Note: If you use multiple users:
+  #   - The only one pair of public and private keys will be used for all users.
+  #   - User-specific subfolders can be automatically created in user_indicator,  macro_indicator, and portfolio directories for each user in the list.
   export SFTP_USER=
 
   # Passphrase for the private key (if applicable)
@@ -27,13 +56,13 @@ DIR="$(cd "$(dirname "$0")" && pwd)"
   export SFTP_PRIVATE_KEY="$HOME/.ssh/id_rsa"
 
   # Directory for storing user indicator files
-  export SFTP_LOCAL_USER_INDICATOR_DIRECTORY="$(pwd)/user_indicato"
+  export SFTP_LOCAL_USER_INDICATOR_DIRECTORY="$DIR/user_indicator"
 
   # Directory for storing macro indicator files
-  export SFTP_LOCAL_MACRO_INDICATOR_DIRECTORY="$(pwd)/macro_indicator"
+  export SFTP_LOCAL_MACRO_INDICATOR_DIRECTORY="$DIR/macro_indicator"
 
   # Directory for storing portfolio files
-  export SFTP_LOCAL_PORTFOLIO_DIRECTORY="$(pwd)/portfolio"
+  export SFTP_LOCAL_PORTFOLIO_DIRECTORY="$DIR/portfolio"
 
   # Maps external IDs to substrings in portfolio file names.
   # Example: PortfolioExternalId1-Portfolio1,PortfolioExternalId2-Portfolio2
@@ -42,6 +71,10 @@ DIR="$(cd "$(dirname "$0")" && pwd)"
   # - PortfolioExternalId2: External ID of the second portfolio.
   # - Portfolio2: Substring in the file name within the portfolio folder that matches the second portfolio.
   # Dont use '-' character in the substring
+  # Possible errors:
+  # - "Mapping parameter is empty or contains more then one similar subName in mappings"
+  #   Make sure that the substring is unique in the mapping parameters.
+  #   For example, if you have value "a-a,aa-aa" or "PortfolioExternalId-Portfolio,PortfolioExternalId1-Portfolio1" there will be an error.
   export SFTP_PORTFOLIO_FILE_MAPPER=
 
   # Specifies the default operation for portfolio files. F = replace, M = modify.
@@ -56,6 +89,10 @@ DIR="$(cd "$(dirname "$0")" && pwd)"
   # - UserExternalId2: External ID of the second user indicator.
   # - UserIndicator2: Substring in the file name within the user indicator folder that matches the second user indicator.
   # Dont use '-' character in the substring
+  # Possible errors:
+  # - "Mapping parameter is empty or contains more then one similar subName in mappings"
+  #   Make sure that the substring is unique in the mapping parameters.
+  #   For example, if you have value "a-a,aa-aa" or "UserExternalId-UserIndicator,UserExternalId1-UserIndicator1" there will be an error.
   export SFTP_USER_INDICATOR_FILE_MAPPER=
 
   # Specifies the default operation for user indicator files. F = replace, M = modify.
@@ -70,6 +107,10 @@ DIR="$(cd "$(dirname "$0")" && pwd)"
   # - MacroExternalId2: External ID of the second macro indicator.
   # - MacroIndicator2: Substring in the file name within the macro indicator folder that matches the second macro indicator.
   # Dont use '-' character in the substring
+  # Possible errors:
+  # - "Mapping parameter is empty or contains more then one similar subName in mappings"
+  #   Make sure that the substring is unique in the mapping parameters.
+  #   For example, if you have value "a-a,aa-aa" or "MacroExternalId1-MacroIndicator1,MacroExternalId-MacroIndicator" there will be an error.
   export SFTP_MACRO_INDICATOR_FILE_MAPPER=
 
   # Specifies the default operation for macro indicator files. F = replace, M = modify.
