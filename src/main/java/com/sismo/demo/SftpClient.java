@@ -3,8 +3,10 @@ package com.sismo.demo;
 import com.sismo.demo.service.FileProcessingStats;
 import com.sismo.demo.service.SftpConnectionManager;
 import com.sismo.demo.service.SftpFileUploader;
+import com.sismo.demo.utils.FileUtil;
 import net.schmizz.sshj.SSHClient;
 
+import java.io.File;
 import java.io.IOException;
 
 import static com.sismo.demo.Constants.LOCAL_MACRO_INDICATOR_DIRECTORY;
@@ -26,11 +28,17 @@ import static com.sismo.demo.Constants.USERS;
 import static com.sismo.demo.Constants.USER_INDICATOR_FILE_MAPPER;
 import static com.sismo.demo.Constants.USER_INDICATOR_FILE_MAPPER_DEFAULT_OPERATION;
 import static com.sismo.demo.Constants.isMultiUserMode;
+import static com.sismo.demo.utils.FileUtil.createArchiveFile;
 import static com.sismo.demo.utils.FileUtil.prepareUserDirectories;
 import static com.sismo.demo.utils.LogUtil.log;
 
 public class SftpClient {
     public static void main(String[] args) {
+        String curDir = System.getProperty("user.dir");
+        File archiveLogFile = createArchiveFile(curDir);
+        File logFile = new File(LOG_FILE_NAME);
+        FileUtil.zipAndDeleteFile(logFile, archiveLogFile);
+
         if (isMultiUserMode()) {
             prepareUserDirectories();
         }

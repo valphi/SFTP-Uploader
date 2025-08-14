@@ -12,7 +12,7 @@ public class LogUtil {
             writer.write(timestampedMessage + "\n");
             System.out.println(timestampedMessage);
         } catch (IOException e) {
-            System.err.println("Error writing to log file: " + e.getMessage());
+            System.err.println("Error writing to log file: " + e);
         }
     }
 

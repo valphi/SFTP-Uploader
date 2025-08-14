@@ -126,7 +126,7 @@ public class SftpFileUploader {
                 if (subNameOptional.isEmpty()) {
                     String[] fileNameSplit = fileName.split("-");
                     if (fileNameSplit.length != 3) {
-                        log("File name does not match any subName in the mapping parameter. File isn't uploaded: " + fileName, LOG_FILE_NAME);
+                        log("File name does not match any subName in the mapping parameter. File isn't uploaded: " + fileName + ", subName: " + subNameByExternalId.values(), LOG_FILE_NAME);
                         stats.addSkipped(fileName, "Filename doesn't match any subName in mapping");
                         return;
                     }
@@ -138,7 +138,7 @@ public class SftpFileUploader {
                     String normalizedExternalId = normalizeString(externalId);
                     if (normalizedExternalId != null && !normalizedExternalIds.contains(normalizedExternalId)) {
                         stats.addSkipped(fileName, "External ID doesn't match any mapping");
-                        log("File name does not match any subName in the mapping parameter. File isn't uploaded: " + fileName, LOG_FILE_NAME);
+                        log("File name does not match any subName in the mapping parameter. File isn't uploaded: " + fileName + ", subName: " + subNameByExternalId.values(), LOG_FILE_NAME);
                         return;
                     }
                 } else {
