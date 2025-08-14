@@ -15,4 +15,14 @@ public class LogUtil {
             System.err.println("Error writing to log file: " + e.getMessage());
         }
     }
+
+    public static void log(String message, Exception e, String logFilePath) {
+        try (FileWriter writer = new FileWriter(logFilePath, true)) {
+            String timestampedMessage = "[" + now() + "] " + message + ": " + e;
+            writer.write(timestampedMessage + "\n");
+            System.out.println(timestampedMessage);
+        } catch (IOException error) {
+            System.err.println("Error writing to log file: " + error);
+        }
+    }
 }

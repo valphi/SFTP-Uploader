@@ -23,7 +23,6 @@ public class DirectoryUtil {
 
         File[] files = folder.listFiles(File::isFile);
         if (isEmptyOrOnlyLogFile(files)) {
-            log("No files or folders to process in: " + localDirectory, LOG_FILE_NAME);
             return;
         }
 
@@ -37,7 +36,7 @@ public class DirectoryUtil {
 
             log("Archive created successfully: " + zipFile.getPath(), LOG_FILE_NAME);
         } catch (IOException e) {
-            log("Error creating archive: " + e.getMessage(), LOG_FILE_NAME);
+            log("Error creating archive", e, LOG_FILE_NAME);
         }
 
         deleteNonArchivedFiles(files);
