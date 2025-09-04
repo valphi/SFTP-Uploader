@@ -48,12 +48,18 @@ REM - PortfolioExternalId1: External ID of the first portfolio.
 REM - Portfolio1: Substring in the file name within the portfolio folder that matches the first portfolio.
 REM - PortfolioExternalId2: External ID of the second portfolio.
 REM - Portfolio2: Substring in the file name within the portfolio folder that matches the second portfolio.
-REM Dont use '-' character in the substring
+REM Don't use characters in the substring:
+REM - hyphen
+REM , comma
+REM % percent
+REM ^ caret
+REM & ampersand
+REM ' quote
 REM Possible errors:
 REM - "Mapping parameter is empty or contains more then one similar subName in mappings"
 REM   Make sure that the substring is unique in the mapping parameters.
 REM   For example, if you have value "a-a,aa-aa" or "PortfolioExternalId-Portfolio,PortfolioExternalId1-Portfolio1" there will be an error.
-set SFTP_PORTFOLIO_FILE_MAPPER=
+set SFTP_PORTFOLIO_FILE_MAPPER= 
 
 REM Specifies the default operation for portfolio files. F = replace, M = modify.
 REM Example: M
@@ -66,12 +72,18 @@ REM - UserExternalId1: External ID of the first user indicator.
 REM - UserIndicator1: Substring in the file name within the user indicator folder that matches the first user indicator.
 REM - UserExternalId2: External ID of the second user indicator.
 REM - UserIndicator2: Substring in the file name within the user indicator folder that matches the second user indicator.
-REM Dont use '-' character in the substring
+REM Don't use characters in the substring:
+REM - hyphen
+REM , comma
+REM % percent
+REM ^ caret
+REM & ampersand
+REM ' quote
 REM Possible errors:
 REM - "Mapping parameter is empty or contains more then one similar subName in mappings"
 REM   Make sure that the substring is unique in the mapping parameters.
 REM   For example, if you have value "a-a,aa-aa" or "UserExternalId-UserIndicator,UserExternalId1-UserIndicator1" there will be an error.
-set SFTP_USER_INDICATOR_FILE_MAPPER=
+set SFTP_USER_INDICATOR_FILE_MAPPER= 
 
 REM Specifies the default operation for user indicator files. F = replace, M = modify.
 REM Example: M
@@ -84,12 +96,18 @@ REM - MacroExternalId1: External ID of the first macro indicator.
 REM - MacroIndicator1: Substring in the file name within the macro indicator folder that matches the first macro indicator.
 REM - MacroExternalId2: External ID of the second macro indicator.
 REM - MacroIndicator2: Substring in the file name within the macro indicator folder that matches the second macro indicator.
-REM Dont use '-' character in the substring
+REM Don't use characters in the substring:
+REM - hyphen
+REM , comma
+REM % percent
+REM ^ caret
+REM & ampersand
+REM ' quote
 REM Possible errors:
 REM - "Mapping parameter is empty or contains more then one similar subName in mappings"
 REM   Make sure that the substring is unique in the mapping parameters.
 REM   For example, if you have value "a-a,aa-aa" or "MacroExternalId1-MacroIndicator1,MacroExternalId-MacroIndicator" there will be an error.
-set SFTP_MACRO_INDICATOR_FILE_MAPPER=
+set SFTP_MACRO_INDICATOR_FILE_MAPPER= 
 
 REM Specifies the default operation for macro indicator files. F = replace, M = modify.
 REM Example: M
