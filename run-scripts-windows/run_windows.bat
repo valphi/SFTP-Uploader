@@ -59,7 +59,7 @@ REM Possible errors:
 REM - "Mapping parameter is empty or contains more then one similar subName in mappings"
 REM   Make sure that the substring is unique in the mapping parameters.
 REM   For example, if you have value "a-a,aa-aa" or "PortfolioExternalId-Portfolio,PortfolioExternalId1-Portfolio1" there will be an error.
-set SFTP_PORTFOLIO_FILE_MAPPER= 
+set SFTP_PORTFOLIO_FILE_MAPPER=
 
 REM Specifies the default operation for portfolio files. F = replace, M = modify.
 REM Example: M
@@ -83,7 +83,7 @@ REM Possible errors:
 REM - "Mapping parameter is empty or contains more then one similar subName in mappings"
 REM   Make sure that the substring is unique in the mapping parameters.
 REM   For example, if you have value "a-a,aa-aa" or "UserExternalId-UserIndicator,UserExternalId1-UserIndicator1" there will be an error.
-set SFTP_USER_INDICATOR_FILE_MAPPER= 
+set SFTP_USER_INDICATOR_FILE_MAPPER=
 
 REM Specifies the default operation for user indicator files. F = replace, M = modify.
 REM Example: M
@@ -107,7 +107,7 @@ REM Possible errors:
 REM - "Mapping parameter is empty or contains more then one similar subName in mappings"
 REM   Make sure that the substring is unique in the mapping parameters.
 REM   For example, if you have value "a-a,aa-aa" or "MacroExternalId1-MacroIndicator1,MacroExternalId-MacroIndicator" there will be an error.
-set SFTP_MACRO_INDICATOR_FILE_MAPPER= 
+set SFTP_MACRO_INDICATOR_FILE_MAPPER=
 
 REM Specifies the default operation for macro indicator files. F = replace, M = modify.
 REM Example: M
