@@ -115,16 +115,13 @@ REM Pay attention to the default operation. If you set it to "F", macro indicato
 set SFTP_MACRO_INDICATOR_FILE_MAPPER_DEFAULT_OPERATION=
 
 REM Define the directory of the script
-set DIR=%~dp0
-cd /d "%DIR%"
+cd /d "%~dp0"
 
 REM Check if Java runtime exists
-if not exist "%DIR%jre\bin" (
-    echo Java runtime not found in %DIR%jre\bin\java
+if not exist "%~dp0jre\bin" (
+    echo Java runtime not found in "%~dp0jre\bin\java"
     exit /b 1
 )
 
 REM Run the Java application
-"%DIR%jre\bin\java.exe" -Dfile.encoding=UTF-8 -Dconsole.encoding=UTF-8 -jar "%DIR%SftpClient.jar"
-
-exit /b 0
+"%~dp0jre\bin\java.exe" -Dfile.encoding=UTF-8 -Dconsole.encoding=UTF-8 -jar "%~dp0SftpClient.jar"
