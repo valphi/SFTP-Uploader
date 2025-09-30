@@ -43,7 +43,7 @@ public class SftpFileUploader {
                                       String sftpDirectory,
                                       String fileMapper,
                                       String operationType,
-                                      FileProcessingStats stats) {
+                                      FileProcessingStats stats) throws Exception {
         if (stats == null) {
             stats = new FileProcessingStats();
         }
@@ -104,7 +104,7 @@ public class SftpFileUploader {
                              String sftpDirectory,
                              Map<String, String> subNameByExternalId,
                              String operationType,
-                             FileProcessingStats stats) {
+                             FileProcessingStats stats) throws Exception {
         String fileName = file.getName();
         try {
             log("Starting to process file: " + fileName, LOG_FILE_NAME);
@@ -170,11 +170,14 @@ public class SftpFileUploader {
             }
         } catch (Exception e) {
             log("Error processing file: " + fileName, e, LOG_FILE_NAME);
+            if (e instanceof IOException) {
+                throw e;
+            }
             stats.addFailure(fileName, "Processing error: " + e.getMessage());
         }
     }
 
-    private boolean uploadFileToSFTP(SSHClient ssh, String fileName, String localDirectory, String sftpDirectory) {
+    private boolean uploadFileToSFTP(SSHClient ssh, String fileName, String localDirectory, String sftpDirectory) throws Exception {
         Path localFilePath = Path.of(localDirectory, fileName);
         String remotePath = sftpDirectory + "/" + fileName;
         File localFile = localFilePath.toFile();
@@ -207,11 +210,11 @@ public class SftpFileUploader {
             boolean checksumResult = verifyFileChecksum(sftp, localFile, remotePath, fileName);
             log("Checksum verification " + (checksumResult ? "successful" : "failed") + " for " + fileName, LOG_FILE_NAME);
             return checksumResult;
-        } catch (IOException e) {
-            log("Error uploading file: " + fileName, e, LOG_FILE_NAME);
-            return false;
         } catch (Exception e) {
             log("Unexpected error during file upload for: " + fileName, e, LOG_FILE_NAME);
+            if (e instanceof IOException) {
+                throw e;
+            }
             return false;
         }
     }

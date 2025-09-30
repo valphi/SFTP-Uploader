@@ -8,6 +8,7 @@ import net.schmizz.sshj.SSHClient;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.sismo.demo.Constants.LOCAL_MACRO_INDICATOR_DIRECTORY;
 import static com.sismo.demo.Constants.LOCAL_PORTFOLIO_DIRECTORY;
@@ -33,7 +34,30 @@ import static com.sismo.demo.utils.FileUtil.prepareUserDirectories;
 import static com.sismo.demo.utils.LogUtil.log;
 
 public class SftpClient {
+
+    private static final int UNSUCCESSFUL_ITERATIONS = 2;
+    private static final AtomicInteger iteration = new AtomicInteger(0);
+
     public static void main(String[] args) {
+        try {
+            process();
+        } catch (Exception e) {
+            if (iteration.incrementAndGet() < UNSUCCESSFUL_ITERATIONS) {
+                log("Unsuccessful processing attempt " + iteration + ". Retrying...", e, LOG_FILE_NAME);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException("Retry exception error.", ex);
+                }
+                main(args);
+            } else {
+                log("Processing failed after " + UNSUCCESSFUL_ITERATIONS + " attempts.", e, LOG_FILE_NAME);
+            }
+        }
+    }
+
+    private static void process() throws Exception {
         String curDir = System.getProperty("user.dir");
         File archiveLogFile = createArchiveFile(curDir);
         File logFile = new File(LOG_FILE_NAME);
@@ -62,14 +86,15 @@ public class SftpClient {
 
             } catch (IOException e) {
                 log("Error connecting to SFTP server for user: " + user, e, LOG_FILE_NAME);
-            } finally {
                 if (ssh != null) {
                     try {
+                        Thread.sleep(20000); // wait before disconnecting
                         ssh.disconnect();
-                    } catch (IOException e) {
-                        log("Error disconnecting from SFTP server", e, LOG_FILE_NAME);
+                    } catch (Exception ex) {
+                        log("Error disconnecting from SFTP server", ex, LOG_FILE_NAME);
                     }
                 }
+                throw e;
             }
         }
         log("\n" + aggregatedStats.generateAggregatedSummaryReport(), LOG_FILE_NAME);
@@ -78,7 +103,7 @@ public class SftpClient {
     private static void processDirectory(String user, SSHClient ssh, SftpFileUploader uploader,
                                          String localBaseDir, String remoteDir,
                                          String fileMapper, String defaultOperation,
-                                         FileProcessingStats stats) {
+                                         FileProcessingStats stats) throws Exception {
         String localDir = isMultiUserMode() ? localBaseDir + "/" + user : localBaseDir;
         uploader.uploadFilesAndArchive(ssh, localDir, remoteDir, fileMapper, defaultOperation, stats);
     }

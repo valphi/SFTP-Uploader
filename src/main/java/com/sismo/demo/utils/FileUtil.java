@@ -132,7 +132,7 @@ public class FileUtil {
         return subNames.stream().filter(fileName::contains).findFirst();
     }
 
-    public static boolean verifyFileChecksum(SFTPClient sftp, File localFile, String remotePath, String fileName) {
+    public static boolean verifyFileChecksum(SFTPClient sftp, File localFile, String remotePath, String fileName) throws Exception {
         try {
             String localChecksum = calculateChecksum(localFile);
             Path tempFilePath = Files.createTempFile("verify_", "_" + fileName);
@@ -152,6 +152,9 @@ public class FileUtil {
             }
         } catch (Exception e) {
             log("Error during checksum verification: " + e.getMessage(), LOG_FILE_NAME);
+            if (e instanceof IOException) {
+                throw e;
+            }
             return false;
         }
     }
