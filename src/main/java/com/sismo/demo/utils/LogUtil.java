@@ -21,6 +21,7 @@ public class LogUtil {
             String timestampedMessage = "[" + now() + "] " + message + ": " + e;
             writer.write(timestampedMessage + "\n");
             System.out.println(timestampedMessage);
+            e.printStackTrace(System.out);
         } catch (IOException error) {
             System.err.println("Error writing to log file: " + error);
         }
